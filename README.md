@@ -6,6 +6,19 @@
 - **Sriya Dasari** - PES2UG24CS522
 
 ---
+## Project Explanation
+
+This project implements a **lightweight container runtime from scratch in C**, similar to the core concepts behind Docker. The system can run multiple isolated Linux containers simultaneously, monitor their memory usage, and manage their lifecycle.
+
+### What This Project Does
+
+1. **Process Isolation**: Each container runs in its own Linux namespaces (PID, UTS, Mount), making it think it has its own separate system.
+
+2. **Resource Limits**: A kernel module monitors memory usage and enforces soft/hard limits - warning at soft limit and killing at hard limit.
+
+3. **Lifecycle Management**: A supervisor daemon manages containers with commands to start, stop, list, and view logs.
+
+4. **Log Collection**: All container output is captured through a bounded-buffer logging pipeline and written to persistent log files.
 
 ## Build, Load, and Run Instructions
 
