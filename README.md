@@ -20,6 +20,20 @@ This project implements a **lightweight container runtime from scratch in C**, s
 
 4. **Log Collection**: All container output is captured through a bounded-buffer logging pipeline and written to persistent log files.
 
+### Key Features Implemented
+
+| Feature | Implementation |
+|---------|----------------|
+| Multi-container management | Supervisor tracks multiple containers with unique PIDs |
+| Process isolation | clone() with CLONE_NEWPID, CLONE_NEWUTS, CLONE_NEWNS |
+| Filesystem isolation | chroot() into per-container rootfs |
+| Memory limits | Kernel module with RSS monitoring and SIGKILL enforcement |
+| Logging | Bounded buffer with producer-consumer threads |
+| IPC | UNIX domain socket for control, pipes for logging |
+| Scheduling | nice() values to demonstrate Linux CFS behavior |
+
+---
+
 ## Build, Load, and Run Instructions
 
 ### Prerequisites
