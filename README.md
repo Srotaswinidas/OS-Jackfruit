@@ -1,111 +1,94 @@
-# Multi-Container Runtime
+# Multi-Container Runtime Project
 
-A lightweight Linux container runtime in C with a long-running supervisor and a kernel-space memory monitor.
+## Team Information
 
-Read [`project-guide.md`](project-guide.md) for the full project specification.
+- Srotaswini Das-PES2UG24CS525
+- Sriya Dasari-PES2UG24CS522
 
 ---
 
-## Getting Started
+## Build, Load, and Run Instructions
 
-### 1. Fork the Repository
-
-1. Go to [github.com/shivangjhalani/OS-Jackfruit](https://github.com/shivangjhalani/OS-Jackfruit)
-2. Click **Fork** (top-right)
-3. Clone your fork:
-
-```bash
-git clone https://github.com/<your-username>/OS-Jackfruit.git
-cd OS-Jackfruit
-```
-
-### 2. Set Up Your VM
-
-You need an **Ubuntu 22.04 or 24.04** VM with **Secure Boot OFF**. WSL will not work.
-
-Install dependencies:
+### Prerequisites
 
 ```bash
 sudo apt update
 sudo apt install -y build-essential linux-headers-$(uname -r)
-```
-
-### 3. Run the Environment Check
-
-```bash
-cd boilerplate
-chmod +x environment-check.sh
-sudo ./environment-check.sh
-```
-
-Fix any issues reported before moving on.
-
-### 4. Prepare the Root Filesystem
-
-```bash
-mkdir rootfs-base
+Prepare Root Filesystem
+bash
+# Download Alpine Linux rootfs
 wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-minirootfs-3.20.3-x86_64.tar.gz
+mkdir rootfs-base
 tar -xzf alpine-minirootfs-3.20.3-x86_64.tar.gz -C rootfs-base
 
-# Make one writable copy per container you plan to run
-cp -a ./rootfs-base ./rootfs-alpha
-cp -a ./rootfs-base ./rootfs-beta
-```
+# Create writable copies for containers
+cp -a rootfs-base rootfs-container1
+cp -a rootfs-base rootfs-container2
+cp -a rootfs-base rootfs-container3
+Build the Project
+bash
+make clean
+make all
+This compiles:
 
-Do not commit `rootfs-base/` or `rootfs-*` directories to your repository.
+engine - User-space runtime and supervisor
 
-### 5. Understand the Boilerplate
+monitor.ko - Kernel memory monitor module
 
-The `boilerplate/` folder contains starter files:
+memory_hog, cpu_hog, io_pulse - Workload binaries
 
-| File                   | Purpose                                             |
-| ---------------------- | --------------------------------------------------- |
-| `engine.c`             | User-space runtime and supervisor skeleton          |
-| `monitor.c`            | Kernel module skeleton                              |
-| `monitor_ioctl.h`      | Shared ioctl command definitions                    |
-| `Makefile`             | Build targets for both user-space and kernel module |
-| `cpu_hog.c`            | CPU-bound test workload                             |
-| `io_pulse.c`           | I/O-bound test workload                             |
-| `memory_hog.c`         | Memory-consuming test workload                      |
-| `environment-check.sh` | VM environment preflight check                      |
+Load Kernel Module
+bash
+sudo insmod monitor.ko
+ls -l /dev/container_monitor
+Start Supervisor
+bash
+sudo ./engine supervisor ./rootfs-base
+Expected output:
 
-Use these as your starting point. You are free to restructure the repository however you want — the submission requirements are listed in the project guide.
+text
+Supervisor running on /tmp/mini_runtime.sock
+Base rootfs: ./rootfs-base
+Launch Containers
+bash
+# Start containers in background
+sudo ./engine start alpha ./rootfs-container1 /alpha.sh
+sudo ./engine start beta ./rootfs-container2 /beta.sh
 
-### 6. Build and Verify
+# List running containers
+sudo ./engine ps
 
-```bash
-cd boilerplate
-make
-```
+# Run a container in foreground
+sudo ./engine run test ./rootfs-container1 /bin/echo "Hello"
 
-If this compiles without errors, your environment is ready.
+# Check container logs
+sudo ./engine logs alpha
 
-### 7. GitHub Actions Smoke Check
+# Stop a container
+sudo ./engine stop alpha
+Memory Limit Testing
+bash
+# Test soft limit (30MB soft, 100MB hard)
+sudo ./engine run soft_test ./rootfs-container1 /memory_hog --soft-mib 30 --hard-mib 100
 
-Your fork will inherit a minimal GitHub Actions workflow from this repository.
+# Test hard limit (10MB soft, 50MB hard)
+sudo ./engine run hard_test ./rootfs-container2 /memory_hog --soft-mib 10 --hard-mib 50
 
-That workflow only performs CI-safe checks:
+# Check kernel messages
+sudo dmesg | grep container_monitor
+Scheduling Experiment
+bash
+# Normal priority (nice 0)
+time sudo ./engine run normal ./rootfs-container1 /cpu_hog 5 --nice 0
 
-- `make -C boilerplate ci`
-- user-space binary compilation (`engine`, `memory_hog`, `cpu_hog`, `io_pulse`)
-- `./boilerplate/engine` with no arguments must print usage and exit with a non-zero status
+# Low priority (nice 19)
+time sudo ./engine run low ./rootfs-container2 /cpu_hog 5 --nice 19
+Cleanup
+bash
+# Stop supervisor (Ctrl+C in supervisor terminal)
 
-The CI-safe build command is:
+# Unload kernel module
+sudo rmmod monitor
 
-```bash
-make -C boilerplate ci
-```
-
-This smoke check does not test kernel-module loading, supervisor runtime behavior, or container execution.
-
----
-
-## What to Do Next
-
-Read [`project-guide.md`](project-guide.md) end to end. It contains:
-
-- The six implementation tasks (multi-container runtime, CLI, logging, kernel monitor, scheduling experiments, cleanup)
-- The engineering analysis you must write
-- The exact submission requirements, including what your `README.md` must contain (screenshots, analysis, design decisions)
-
-Your fork's `README.md` should be replaced with your own project documentation as described in the submission package section of the project guide. (As in get rid of all the above content and replace with your README.md)
+# Clean build files
+make clean
