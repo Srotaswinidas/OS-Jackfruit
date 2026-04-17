@@ -25,6 +25,21 @@ tar -xzf alpine-minirootfs-3.20.3-x86_64.tar.gz -C rootfs-base
 cp -a rootfs-base rootfs-container1
 cp -a rootfs-base rootfs-container2
 cp -a rootfs-base rootfs-container3
+## Root Filesystem Setup
+
+```bash
+# Download Alpine Linux rootfs
+wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-minirootfs-3.20.3-x86_64.tar.gz
+mkdir rootfs-base
+tar -xzf alpine-minirootfs-3.20.3-x86_64.tar.gz -C rootfs-base
+
+# Create writable copies for containers
+cp -a rootfs-base rootfs-container1
+cp -a rootfs-base rootfs-container2
+
+# Copy workload binaries into containers
+cp memory_hog cpu_hog io_pulse rootfs-container1/
+cp memory_hog cpu_hog io_pulse rootfs-container2/
 Build the Project
 bash
 make clean
