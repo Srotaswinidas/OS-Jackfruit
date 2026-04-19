@@ -130,7 +130,7 @@ sudo rmmod monitor
 
 # Clean build files
 make clean
-
+'''
 ## Engineering Analysis
 
 ### 1. Isolation Mechanisms
