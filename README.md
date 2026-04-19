@@ -258,6 +258,7 @@ The low priority process (nice=19) completed approximately 0.668 seconds (13.8%)
 ```bash
 sudo ./engine start high_prio ./rootfs-container1 /cpu_hog 30 --nice 0
 sudo ./engine start low_prio ./rootfs-container2 /cpu_hog 30 --nice 19
+```
 ## Design Decisions and Tradeoffs
 
 ### Namespace Isolation
