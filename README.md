@@ -330,3 +330,16 @@ The Linux CFS scheduler prioritizes fairness over strict priority enforcement. O
 3. **Argument Parsing**: The `run` command has limitations with quoted arguments. Use wrapper scripts for complex commands.
 
 4. **Scheduling Results**: The observed times (low priority faster than normal) indicate that concurrent testing would better demonstrate scheduler behavior.
+
+
+   Screenshots:
+   <img width="493" height="22" alt="ss8" src="https://github.com/user-attachments/assets/b78b786e-1a14-438a-888d-874460abc65e" />
+<img width="1202" height="222" alt="ss7" src="https://github.com/user-attachments/assets/aee10885-7f93-41e2-a9e1-eb2e4a436620" />
+<img width="757" height="67" alt="ss6a" src="https://github.com/user-attachments/assets/00ad608d-44ab-4db3-8f88-5165573e97f8" />
+<img width="935" height="44" alt="ss6" src="https://github.com/user-attachments/assets/2a22be48-4436-4cb2-91dd-efda4746c5b6" />
+<img width="936" height="46" alt="ss5" src="https://github.com/user-attachments/assets/1860cd2e-6045-444c-85ec-161cf4952802" />
+<img width="521" height="50" alt="ss4" src="https://github.com/user-attachments/assets/c484772a-d937-4c51-9afb-8c8aec1ba74a" />
+<img width="571" height="257" alt="ss3" src="https://github.com/user-attachments/assets/5866e4a7-5e1c-43f8-9514-e2f9bd6f9989" />
+<img width="527" height="157" alt="ss2" src="https://github.com/user-attachments/assets/259d34ac-f87c-4e80-85c0-550a92bee036" />
+<img width="960" height="504" alt="ss1" src="https://github.com/user-attachments/assets/3352f04b-cec0-414e-b45e-74dbb9c243d2" />
+
